@@ -2,6 +2,9 @@ import threading
 import subprocess
 import sys
 import os
+import time
+import schedule
+from datetime import datetime
 
 # Python de l'env virtuel
 PYTHON = sys.executable  # utilise le python actif dans l'env
@@ -26,7 +29,7 @@ scripts = [
 
 def run_script(script_name):
     if not os.path.exists(script_name):
-        print(f"⚠️ Script manquant : {script_name} (passé)")
+        print(f"⚠️ Script manquant : {script_name} (ignoré)")
         return
     try:
         print(f"🚀 Lancement de {script_name}...")
@@ -35,14 +38,26 @@ def run_script(script_name):
     except subprocess.CalledProcessError as e:
         print(f"❌ Erreur dans {script_name}: {e} (continuation)")
 
-threads = []
+def run_all_scripts():
+    print(f"\n🕑 Début du batch à {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    threads = []
 
-for script in scripts:
-    t = threading.Thread(target=run_script, args=(script,))
-    t.start()
-    threads.append(t)
+    for script in scripts:
+        t = threading.Thread(target=run_script, args=(script,))
+        t.start()
+        threads.append(t)
 
-for t in threads:
-    t.join()
+    for t in threads:
+        t.join()
 
-print("🏁 Tous les scripts ont été exécutés.")
+    print("🏁 Tous les scripts ont été exécutés.\n")
+
+# ⏰ Planification à 02h00 chaque jour
+schedule.every().day.at("02:00").do(run_all_scripts)
+
+print("🟢 Scheduler actif — exécution quotidienne à 02h00")
+
+# 🔁 Boucle infinie
+while True:
+    schedule.run_pending()
+    time.sleep(30)

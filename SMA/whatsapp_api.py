@@ -29,7 +29,7 @@ load_dotenv(dotenv_path)
 
 # --- Configuration et Initialisation ---
 
-app = FastAPI(title="DomusIA WhatsApp API", version="2.0.0")
+app = FastAPI(title="DomusIA WhatsApp API", version="1.0.0")
 
 # Configuration du logger
 logging.basicConfig(level=logging.INFO)
@@ -309,6 +309,7 @@ Si ce n'est PAS une image de bien immobilier, dis simplement :
         return "Désolé, je n'ai pas pu analyser cette image. Réessaie avec une autre photo !"
 
 
+@app.post("/")
 @app.post("/whatsapp")
 async def whatsapp_webhook(
     # Twilio envoie le numéro du client dans 'From' au format whatsapp:+212...

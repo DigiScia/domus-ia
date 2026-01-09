@@ -1,5 +1,10 @@
 # web_api.py - Application FastAPI principale pour l'interface web
 import os
+import sys
+
+# Add parent directory to path to allow imports from web module
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from datetime import timedelta
 from typing import Optional
 from fastapi import FastAPI, Request, Form, Depends, HTTPException, status, Response
